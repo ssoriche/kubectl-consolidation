@@ -1,0 +1,67 @@
+apiVersion: krew.googlecontainertools.github.com/v1alpha2
+kind: Plugin
+metadata:
+  name: consolidation
+spec:
+  version: v0.1.0
+  homepage: https://github.com/ssoriche/kubectl-consolidation
+  shortDescription: Show Karpenter consolidation blockers for nodes
+  description: |
+    Shows nodes with Karpenter consolidation blocker information including
+    nodepool/provisioner, capacity type, CPU/memory utilization (based on
+    pod requests), and reasons why nodes cannot be consolidated.
+
+    Features:
+    - Automatically detects Karpenter API version (v1alpha5, v1beta1, v1)
+    - Adapts column headers based on detected version (NODEPOOL vs PROVISIONER)
+    - Supports mixed-version clusters during migrations
+    - Shows blocking pods with --pods flag
+    - Outputs in table, JSON, or YAML format
+
+    Blocker types detected:
+    - high-utilization: CPU or memory >= 80%
+    - do-not-evict, do-not-disrupt, do-not-consolidate: Pod annotations
+    - pdb-violation: PodDisruptionBudget prevents eviction
+    - non-replicated: Standalone pod with no controller
+    - local-storage: Pod uses local storage
+  caveats: |
+    This plugin requires Karpenter to be installed in the cluster for
+    meaningful consolidation blocker information. Without Karpenter,
+    the plugin will still show nodes but the NODEPOOL/PROVISIONER and
+    CONSOLIDATION-BLOCKER columns will be empty.
+  platforms:
+    - selector:
+        matchLabels:
+          os: linux
+          arch: amd64
+      uri: https://github.com/ssoriche/kubectl-consolidation/releases/download/v0.1.0/kubectl-consolidation_linux_amd64.tar.gz
+      sha256: "PLACEHOLDER_SHA256_LINUX_AMD64"
+      bin: kubectl-consolidation
+    - selector:
+        matchLabels:
+          os: linux
+          arch: arm64
+      uri: https://github.com/ssoriche/kubectl-consolidation/releases/download/v0.1.0/kubectl-consolidation_linux_arm64.tar.gz
+      sha256: "PLACEHOLDER_SHA256_LINUX_ARM64"
+      bin: kubectl-consolidation
+    - selector:
+        matchLabels:
+          os: darwin
+          arch: amd64
+      uri: https://github.com/ssoriche/kubectl-consolidation/releases/download/v0.1.0/kubectl-consolidation_darwin_amd64.tar.gz
+      sha256: "PLACEHOLDER_SHA256_DARWIN_AMD64"
+      bin: kubectl-consolidation
+    - selector:
+        matchLabels:
+          os: darwin
+          arch: arm64
+      uri: https://github.com/ssoriche/kubectl-consolidation/releases/download/v0.1.0/kubectl-consolidation_darwin_arm64.tar.gz
+      sha256: "PLACEHOLDER_SHA256_DARWIN_ARM64"
+      bin: kubectl-consolidation
+    - selector:
+        matchLabels:
+          os: windows
+          arch: amd64
+      uri: https://github.com/ssoriche/kubectl-consolidation/releases/download/v0.1.0/kubectl-consolidation_windows_amd64.zip
+      sha256: "PLACEHOLDER_SHA256_WINDOWS_AMD64"
+      bin: kubectl-consolidation.exe
