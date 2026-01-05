@@ -45,12 +45,13 @@ func (p *Printer) PrintNodes(nodes []consolidation.NodeInfo) error {
 
 func (p *Printer) printNodesTable(nodes []consolidation.NodeInfo) error {
 	w := tabwriter.NewWriter(p.out, 0, 0, 2, ' ', 0)
-	defer w.Flush()
 
 	poolHeader := p.capabilities.DeterminePoolColumnHeader()
 
 	if !p.noHeaders {
-		fmt.Fprintf(w, "NAME\tSTATUS\tROLES\tAGE\tVERSION\t%s\tCAPACITY-TYPE\tCPU-UTIL\tMEM-UTIL\tCONSOLIDATION-BLOCKER\n", poolHeader)
+		if _, err := fmt.Fprintf(w, "NAME\tSTATUS\tROLES\tAGE\tVERSION\t%s\tCAPACITY-TYPE\tCPU-UTIL\tMEM-UTIL\tCONSOLIDATION-BLOCKER\n", poolHeader); err != nil {
+			return err
+		}
 	}
 
 	for _, info := range nodes {
@@ -73,12 +74,14 @@ func (p *Printer) printNodesTable(nodes []consolidation.NodeInfo) error {
 		memUtil := consolidation.FormatUtilization(info.MemoryUtilization)
 		blockers := consolidation.FormatBlockers(info.Blockers)
 
-		fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+		if _, err := fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
 			node.Name, status, roles, age, version,
-			poolName, capacityType, cpuUtil, memUtil, blockers)
+			poolName, capacityType, cpuUtil, memUtil, blockers); err != nil {
+			return err
+		}
 	}
 
-	return nil
+	return w.Flush()
 }
 
 type nodeOutput struct {
@@ -146,18 +149,21 @@ func (p *Printer) PrintPodBlockers(blockers []consolidation.PodBlocker) error {
 
 func (p *Printer) printPodBlockersTable(blockers []consolidation.PodBlocker) error {
 	w := tabwriter.NewWriter(p.out, 0, 0, 2, ' ', 0)
-	defer w.Flush()
 
 	if !p.noHeaders {
-		fmt.Fprintln(w, "NODE\tNAMESPACE\tPOD\tAGE\tREASON")
+		if _, err := fmt.Fprintln(w, "NODE\tNAMESPACE\tPOD\tAGE\tREASON"); err != nil {
+			return err
+		}
 	}
 
 	for _, b := range blockers {
-		fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n",
-			b.NodeName, b.Namespace, b.PodName, b.Age, b.Reason)
+		if _, err := fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n",
+			b.NodeName, b.Namespace, b.PodName, b.Age, b.Reason); err != nil {
+			return err
+		}
 	}
 
-	return nil
+	return w.Flush()
 }
 
 type podBlockerOutput struct {
