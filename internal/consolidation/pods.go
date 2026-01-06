@@ -8,18 +8,20 @@ import (
 	"k8s.io/client-go/kubernetes"
 )
 
-// FetchPodsOnNode retrieves all pods running on a specific node
-func FetchPodsOnNode(ctx context.Context, client kubernetes.Interface, nodeName string) ([]corev1.Pod, error) {
-	listOpts := metav1.ListOptions{
-		FieldSelector: "spec.nodeName=" + nodeName,
-	}
-
-	podList, err := client.CoreV1().Pods("").List(ctx, listOpts)
+// FetchAllPods retrieves all pods cluster-wide and groups them by node name
+func FetchAllPods(ctx context.Context, client kubernetes.Interface) (map[string][]corev1.Pod, error) {
+	podList, err := client.CoreV1().Pods("").List(ctx, metav1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
 
-	return podList.Items, nil
+	podsByNode := make(map[string][]corev1.Pod)
+	for _, pod := range podList.Items {
+		if nodeName := pod.Spec.NodeName; nodeName != "" {
+			podsByNode[nodeName] = append(podsByNode[nodeName], pod)
+		}
+	}
+	return podsByNode, nil
 }
 
 // BuildPodNameSet creates a set of "namespace/name" strings for quick lookup
