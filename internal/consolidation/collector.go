@@ -47,22 +47,39 @@ func (c *Collector) Collect(ctx context.Context, nodeNames []string, selector st
 		return nil, nil
 	}
 
-	// Fetch all node events in one call for efficiency
-	eventsByNode, err := FetchAllNodeEvents(ctx, c.client)
-	if err != nil {
+	// Fetch all pods and events in parallel (single API call each)
+	var podsByNode map[string][]corev1.Pod
+	var eventsByNode map[string][]corev1.Event
+	var podErr, eventErr error
+
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func() {
+		defer wg.Done()
+		podsByNode, podErr = FetchAllPods(ctx, c.client)
+	}()
+	go func() {
+		defer wg.Done()
+		eventsByNode, eventErr = FetchAllNodeEvents(ctx, c.client)
+	}()
+	wg.Wait()
+
+	if podErr != nil {
+		return nil, podErr
+	}
+	if eventErr != nil {
 		// Non-fatal: continue without events
 		eventsByNode = make(map[string][]corev1.Event)
 	}
 
 	// Process nodes concurrently
-	return c.collectParallel(ctx, nodes, eventsByNode)
+	return c.collectParallel(nodes, podsByNode, eventsByNode)
 }
 
 const maxWorkers = 10
 
-func (c *Collector) collectParallel(ctx context.Context, nodes []corev1.Node, eventsByNode map[string][]corev1.Event) ([]NodeInfo, error) {
+func (c *Collector) collectParallel(nodes []corev1.Node, podsByNode map[string][]corev1.Pod, eventsByNode map[string][]corev1.Event) ([]NodeInfo, error) {
 	results := make([]NodeInfo, len(nodes))
-	errs := make([]error, len(nodes))
 
 	// Use a semaphore to limit concurrency
 	sem := make(chan struct{}, maxWorkers)
@@ -76,28 +93,17 @@ func (c *Collector) collectParallel(ctx context.Context, nodes []corev1.Node, ev
 			sem <- struct{}{}
 			defer func() { <-sem }()
 
-			info, err := c.collectNodeInfo(ctx, &nodes[idx], eventsByNode[nodes[idx].Name])
-			if err != nil {
-				errs[idx] = err
-				return
-			}
-			results[idx] = info
+			nodeName := nodes[idx].Name
+			results[idx] = c.collectNodeInfo(&nodes[idx], podsByNode[nodeName], eventsByNode[nodeName])
 		}(i)
 	}
 
 	wg.Wait()
 
-	// Check for errors (return first error encountered)
-	for _, err := range errs {
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	return results, nil
 }
 
-func (c *Collector) collectNodeInfo(ctx context.Context, node *corev1.Node, events []corev1.Event) (NodeInfo, error) {
+func (c *Collector) collectNodeInfo(node *corev1.Node, pods []corev1.Pod, events []corev1.Event) NodeInfo {
 	info := NodeInfo{
 		Node: node,
 	}
@@ -105,12 +111,6 @@ func (c *Collector) collectNodeInfo(ctx context.Context, node *corev1.Node, even
 	// Get Karpenter info
 	info.PoolName, info.PoolVersion = karpenter.GetPoolName(node)
 	info.CapacityType = karpenter.GetCapacityType(node)
-
-	// Fetch pods on this node
-	pods, err := FetchPodsOnNode(ctx, c.client, node.Name)
-	if err != nil {
-		return info, err
-	}
 
 	// Calculate utilization
 	info.CPUUtilization, info.MemoryUtilization = CalculateUtilization(node, pods)
@@ -121,20 +121,26 @@ func (c *Collector) collectNodeInfo(ctx context.Context, node *corev1.Node, even
 	// Detect blockers
 	info.Blockers = DetectBlockers(pods, events, info.CPUUtilization, info.MemoryUtilization, podNameSet)
 
-	return info, nil
+	return info
 }
 
 // CollectPodBlockers gathers detailed pod blocker information for specific nodes
 func (c *Collector) CollectPodBlockers(ctx context.Context, nodeNames []string) ([]PodBlocker, error) {
+	// Build set of requested nodes for O(1) lookup
+	nodeSet := make(map[string]bool, len(nodeNames))
+	for _, name := range nodeNames {
+		nodeSet[name] = true
+	}
+
+	// Fetch all pods once
+	podsByNode, err := FetchAllPods(ctx, c.client)
+	if err != nil {
+		return nil, err
+	}
+
 	var allBlockers []PodBlocker
-
-	for _, nodeName := range nodeNames {
-		pods, err := FetchPodsOnNode(ctx, c.client, nodeName)
-		if err != nil {
-			return nil, err
-		}
-
-		blockers := FindBlockingPods(pods, nodeName)
+	for nodeName := range nodeSet {
+		blockers := FindBlockingPods(podsByNode[nodeName], nodeName)
 		allBlockers = append(allBlockers, blockers...)
 	}
 
