@@ -56,6 +56,22 @@ func DetectPodBlocker(pod *corev1.Pod) (BlockerType, bool) {
 	return "", false
 }
 
+// blockerPatterns maps regex patterns to blocker types, compiled once at init
+var blockerPatterns = []struct {
+	pattern *regexp.Regexp
+	blocker BlockerType
+}{
+	{regexp.MustCompile(`pdb.*prevent`), BlockerPDBViolation},
+	{regexp.MustCompile(`local storage`), BlockerLocalStorage},
+	{regexp.MustCompile(`non-replicated`), BlockerNonReplicated},
+	{regexp.MustCompile(`would increase cost`), BlockerWouldIncreaseCost},
+	{regexp.MustCompile(`in-use security group`), BlockerInUseSecurityGroup},
+	{regexp.MustCompile(`on-demand`), BlockerOnDemandProtection},
+	{regexp.MustCompile(`do-not-consolidate`), BlockerDoNotConsolidate},
+	{regexp.MustCompile(`do-not-disrupt`), BlockerDoNotDisrupt},
+	{regexp.MustCompile(`do-not-evict`), BlockerDoNotEvict},
+}
+
 // NormalizeEventMessage converts verbose Karpenter event messages to short blocker codes
 func NormalizeEventMessage(message string) BlockerType {
 	if message == "" {
@@ -63,23 +79,7 @@ func NormalizeEventMessage(message string) BlockerType {
 	}
 
 	lower := strings.ToLower(message)
-
-	patterns := []struct {
-		pattern *regexp.Regexp
-		blocker BlockerType
-	}{
-		{regexp.MustCompile(`pdb.*prevent`), BlockerPDBViolation},
-		{regexp.MustCompile(`local storage`), BlockerLocalStorage},
-		{regexp.MustCompile(`non-replicated`), BlockerNonReplicated},
-		{regexp.MustCompile(`would increase cost`), BlockerWouldIncreaseCost},
-		{regexp.MustCompile(`in-use security group`), BlockerInUseSecurityGroup},
-		{regexp.MustCompile(`on-demand`), BlockerOnDemandProtection},
-		{regexp.MustCompile(`do-not-consolidate`), BlockerDoNotConsolidate},
-		{regexp.MustCompile(`do-not-disrupt`), BlockerDoNotDisrupt},
-		{regexp.MustCompile(`do-not-evict`), BlockerDoNotEvict},
-	}
-
-	for _, p := range patterns {
+	for _, p := range blockerPatterns {
 		if p.pattern.MatchString(lower) {
 			return p.blocker
 		}
