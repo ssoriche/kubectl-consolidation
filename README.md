@@ -90,8 +90,8 @@ Mixed-version clusters are supported during migrations.
 ## Development
 
 ```bash
-# Enter devbox shell
-devbox shell
+# Enter the flox development environment
+flox activate
 
 # Build
 make build
