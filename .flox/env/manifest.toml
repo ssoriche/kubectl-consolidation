@@ -1,0 +1,45 @@
+schema-version = "1.13.0"
+
+
+## Install Packages --------------------------------------------------
+##  Go is pinned to 1.25 to satisfy the `go 1.25.0` directive in go.mod.
+## -------------------------------------------------------------------
+[install]
+go.pkg-path = "go_1_25"
+golangci-lint.pkg-path = "golangci-lint"
+goreleaser.pkg-path = "goreleaser"
+kubectl.pkg-path = "kubectl"
+
+
+## Activation Hook ---------------------------------------------------
+##  Run by bash when you run 'flox activate'.
+## -------------------------------------------------------------------
+[hook]
+on-activate = '''
+  echo 'kubectl-consolidation development environment ready'
+  echo "Go version: $(go version)"
+'''
+
+
+## Profile script ----------------------------------------------------
+##  Sourced by your shell on 'flox activate'. These aliases mirror the
+##  devbox scripts, delegating to the Makefile targets.
+## -------------------------------------------------------------------
+[profile]
+common = '''
+  alias build="make build"
+  alias test="make test"
+  alias lint="make lint"
+  alias check="make check"
+'''
+
+
+## Other Environment Options -----------------------------------------
+[options]
+# Systems that environment is compatible with
+systems = [
+  "aarch64-darwin",
+  "aarch64-linux",
+  "x86_64-darwin",
+  "x86_64-linux",
+]
