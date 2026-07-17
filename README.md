@@ -19,6 +19,36 @@ A kubectl plugin that shows Karpenter consolidation blockers for nodes.
 kubectl krew install consolidation
 ```
 
+### Via Nix (flake)
+
+Run it directly, or install it into a profile:
+
+```bash
+nix run github:ssoriche/kubectl-consolidation -- --help
+nix profile install github:ssoriche/kubectl-consolidation
+```
+
+The flake also exports an overlay and NixOS / home-manager modules. Because
+kubectl discovers `kubectl-*` binaries on `PATH`, enabling the module makes
+`kubectl consolidation` available:
+
+```nix
+{
+  inputs.kubectl-consolidation.url = "github:ssoriche/kubectl-consolidation";
+
+  # NixOS
+  #   imports = [ inputs.kubectl-consolidation.nixosModules.default ];
+  #   programs.kubectl-consolidation.enable = true;
+
+  # home-manager
+  #   imports = [ inputs.kubectl-consolidation.homeManagerModules.default ];
+  #   programs.kubectl-consolidation.enable = true;
+
+  # or add inputs.kubectl-consolidation.overlays.default and use
+  # pkgs.kubectl-consolidation directly.
+}
+```
+
 ### Manual installation
 
 Download the appropriate binary from the [releases page](https://github.com/ssoriche/kubectl-consolidation/releases), extract it, and place it in your PATH.
@@ -90,8 +120,11 @@ Mixed-version clusters are supported during migrations.
 ## Development
 
 ```bash
-# Enter devbox shell
-devbox shell
+# Enter the flox development environment
+flox activate
+
+# ...or use the Nix flake dev shell
+nix develop
 
 # Build
 make build
