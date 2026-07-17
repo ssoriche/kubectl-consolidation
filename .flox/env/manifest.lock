@@ -19,9 +19,6 @@
     "hook": {
       "on-activate": "  echo 'kubectl-consolidation development environment ready'\n  echo \"Go version: $(go version)\"\n"
     },
-    "profile": {
-      "common": "  alias build=\"make build\"\n  alias test=\"make test\"\n  alias lint=\"make lint\"\n  alias check=\"make check\"\n"
-    },
     "options": {
       "systems": [
         "aarch64-darwin",

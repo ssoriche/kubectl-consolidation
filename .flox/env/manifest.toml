@@ -21,19 +21,6 @@ on-activate = '''
 '''
 
 
-## Profile script ----------------------------------------------------
-##  Sourced by your shell on 'flox activate'. These aliases mirror the
-##  devbox scripts, delegating to the Makefile targets.
-## -------------------------------------------------------------------
-[profile]
-common = '''
-  alias build="make build"
-  alias test="make test"
-  alias lint="make lint"
-  alias check="make check"
-'''
-
-
 ## Other Environment Options -----------------------------------------
 [options]
 # Systems that environment is compatible with
