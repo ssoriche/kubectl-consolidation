@@ -2,6 +2,7 @@ package kube
 
 import (
 	"k8s.io/client-go/discovery"
+	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 )
@@ -31,4 +32,17 @@ func NewDiscoveryClient() (discovery.DiscoveryInterface, error) {
 	}
 
 	return discovery.NewDiscoveryClientForConfig(config)
+}
+
+// NewDynamicClient creates a dynamic client for fetching unstructured resources (NodePools, Provisioners).
+func NewDynamicClient() (dynamic.Interface, error) {
+	config, err := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
+		clientcmd.NewDefaultClientConfigLoadingRules(),
+		&clientcmd.ConfigOverrides{},
+	).ClientConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	return dynamic.NewForConfig(config)
 }

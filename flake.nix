@@ -43,12 +43,12 @@
         }
       );
 
-      # Matches the flox dev environment: Go 1.25 plus the release tooling.
+      # Matches the flox dev environment: Go 1.26 plus the release tooling.
       devShells = forAllSystems (
         _system: pkgs: {
           default = pkgs.mkShellNoCC {
             packages = [
-              pkgs.go_1_25
+              pkgs.go_1_26
               pkgs.golangci-lint
               pkgs.goreleaser
               pkgs.kubectl

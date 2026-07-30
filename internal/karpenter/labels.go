@@ -13,6 +13,14 @@ const (
 // Common labels (all versions)
 const (
 	LabelCapacityType = "karpenter.sh/capacity-type"
+	LabelInstanceType = "node.kubernetes.io/instance-type"
+	LabelTopologyZone = "topology.kubernetes.io/zone"
+)
+
+// Capacity types
+const (
+	CapacityTypeOnDemand = "on-demand"
+	CapacityTypeSpot     = "spot"
 )
 
 // Annotations (all versions)
