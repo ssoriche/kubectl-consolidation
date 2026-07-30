@@ -1,16 +1,16 @@
 {
   lib,
   buildGoModule,
-  go_1_25,
+  go_1_26,
   versionCheckHook,
 }:
 
 let
   version = "0.1.0";
 in
-# Pin the Go toolchain to 1.25 to satisfy the `go 1.25.0` directive in go.mod;
+# Pin the Go toolchain to 1.26 to satisfy the `go 1.26.0` directive in go.mod;
 # a sandboxed Nix build cannot download a newer toolchain on demand.
-(buildGoModule.override { go = go_1_25; }) {
+(buildGoModule.override { go = go_1_26; }) {
   pname = "kubectl-consolidation";
   inherit version;
 
@@ -26,7 +26,7 @@ in
     ];
   };
 
-  vendorHash = "sha256-hlXec43wVOrfFocXFS+NvZMwoSvDDiNfU7hqY+MAtKk=";
+  vendorHash = "sha256-JyrEXuI9B1dPhhAtzpiz4s7+T4yUaRBH74PKky9Q4JI=";
 
   subPackages = [ "cmd/kubectl-consolidation" ];
 
