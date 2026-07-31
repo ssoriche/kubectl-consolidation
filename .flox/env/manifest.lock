@@ -4,7 +4,7 @@
     "schema-version": "1.13.0",
     "install": {
       "go": {
-        "pkg-path": "go_1_25"
+        "pkg-path": "go_1_26"
       },
       "golangci-lint": {
         "pkg-path": "golangci-lint"
@@ -30,120 +30,122 @@
   },
   "packages": [
     {
-      "attr_path": "go_1_25",
+      "attr_path": "go_1_26",
       "broken": false,
-      "derivation": "/nix/store/cy5n0nsayjgfx7g4gpwnpg6b50yx1ixp-go-1.25.11.drv",
+      "derivation": "/nix/store/0j94l4ngkz3fppqd0wxqsvjwri4fny1y-go-1.26.4.drv",
       "description": "Go Programming language",
       "install_id": "go",
       "license": "BSD-3-Clause",
       "locked_url": "https://github.com/flox/nixpkgs?rev=d407951447dcd00442e97087bf374aad70c04cea",
-      "name": "go-1.25.11",
-      "pname": "go_1_25",
+      "name": "go-1.26.4",
+      "pname": "go_1_26",
       "rev": "d407951447dcd00442e97087bf374aad70c04cea",
       "rev_count": 1027867,
       "rev_date": "2026-07-05T04:06:12Z",
-      "scrape_date": "2026-07-06T03:12:56.252532Z",
+      "scrape_date": "2026-07-06T03:12:56.252875Z",
       "stabilities": [
         "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "1.25.11",
+      "version": "1.26.4",
       "outputs_to_install": [
+        "out",
+        "out",
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/4sgaa17v8iqvvv482cm8xw78pjjcyjy8-go-1.25.11"
+        "out": "/nix/store/kyai650rrywrzflnwda9mbk2c2j9w68r-go-1.26.4"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
       "priority": 5
     },
     {
-      "attr_path": "go_1_25",
+      "attr_path": "go_1_26",
       "broken": false,
-      "derivation": "/nix/store/fm8hfi9x01zkmgi39rhrpz60gcks8ccz-go-1.25.11.drv",
+      "derivation": "/nix/store/a402qx3ryvfilga56w29z0izz6jgi7gi-go-1.26.4.drv",
       "description": "Go Programming language",
       "install_id": "go",
       "license": "BSD-3-Clause",
       "locked_url": "https://github.com/flox/nixpkgs?rev=d407951447dcd00442e97087bf374aad70c04cea",
-      "name": "go-1.25.11",
-      "pname": "go_1_25",
+      "name": "go-1.26.4",
+      "pname": "go_1_26",
       "rev": "d407951447dcd00442e97087bf374aad70c04cea",
       "rev_count": 1027867,
       "rev_date": "2026-07-05T04:06:12Z",
-      "scrape_date": "2026-07-06T03:41:23.933085Z",
+      "scrape_date": "2026-07-06T03:41:23.933537Z",
       "stabilities": [
         "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "1.25.11",
+      "version": "1.26.4",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/xqj68hc6m6hyfln6w3s3inkd9safxbg5-go-1.25.11"
+        "out": "/nix/store/lgcj27hrbanbc93xm9zdrldds7b1jrw8-go-1.26.4"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
       "priority": 5
     },
     {
-      "attr_path": "go_1_25",
+      "attr_path": "go_1_26",
       "broken": false,
-      "derivation": "/nix/store/p9rv3hi42w7j8bah0jqwdc19524wp01b-go-1.25.11.drv",
+      "derivation": "/nix/store/0lvbzgq250sass3jyxxvpamk09gcnym3-go-1.26.4.drv",
       "description": "Go Programming language",
       "install_id": "go",
       "license": "BSD-3-Clause",
       "locked_url": "https://github.com/flox/nixpkgs?rev=d407951447dcd00442e97087bf374aad70c04cea",
-      "name": "go-1.25.11",
-      "pname": "go_1_25",
+      "name": "go-1.26.4",
+      "pname": "go_1_26",
       "rev": "d407951447dcd00442e97087bf374aad70c04cea",
       "rev_count": 1027867,
       "rev_date": "2026-07-05T04:06:12Z",
-      "scrape_date": "2026-07-06T04:09:01.866760Z",
+      "scrape_date": "2026-07-06T04:09:01.867103Z",
       "stabilities": [
         "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "1.25.11",
+      "version": "1.26.4",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/0fhksm07spk8c42xln1b9sb5im7ljcb1-go-1.25.11"
+        "out": "/nix/store/h0z6ghmi3cihlbm163d72xs9p9nn04a1-go-1.26.4"
       },
       "system": "x86_64-darwin",
       "group": "toplevel",
       "priority": 5
     },
     {
-      "attr_path": "go_1_25",
+      "attr_path": "go_1_26",
       "broken": false,
-      "derivation": "/nix/store/c9b0cjbq4zhd74qkvd3614sn526ak9n6-go-1.25.11.drv",
+      "derivation": "/nix/store/z0b6qhv17xys7hfpnxmk0vm31nc3pxdf-go-1.26.4.drv",
       "description": "Go Programming language",
       "install_id": "go",
       "license": "BSD-3-Clause",
       "locked_url": "https://github.com/flox/nixpkgs?rev=d407951447dcd00442e97087bf374aad70c04cea",
-      "name": "go-1.25.11",
-      "pname": "go_1_25",
+      "name": "go-1.26.4",
+      "pname": "go_1_26",
       "rev": "d407951447dcd00442e97087bf374aad70c04cea",
       "rev_count": 1027867,
       "rev_date": "2026-07-05T04:06:12Z",
-      "scrape_date": "2026-07-06T04:40:26.755439Z",
+      "scrape_date": "2026-07-06T04:40:26.755892Z",
       "stabilities": [
         "staging",
         "unstable"
       ],
       "unfree": false,
-      "version": "1.25.11",
+      "version": "1.26.4",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/binbxcrrms98kcy8amn34ynij0x8zrml-go-1.25.11"
+        "out": "/nix/store/gb0njhqswlc5n127ikgyikvq39r40l6f-go-1.26.4"
       },
       "system": "x86_64-linux",
       "group": "toplevel",
