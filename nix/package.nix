@@ -6,7 +6,7 @@
 }:
 
 let
-  version = "0.1.0";
+  version = "0.1.1";
 in
 # Pin the Go toolchain to 1.26 to satisfy the `go 1.26.0` directive in go.mod;
 # a sandboxed Nix build cannot download a newer toolchain on demand.
@@ -26,7 +26,7 @@ in
     ];
   };
 
-  vendorHash = "sha256-JyrEXuI9B1dPhhAtzpiz4s7+T4yUaRBH74PKky9Q4JI=";
+  vendorHash = "sha256-KQk30cu40RQs/vB/EY566qn0nJVt5VR2zkRuIKQOq+o=";
 
   subPackages = [ "cmd/kubectl-consolidation" ];
 
